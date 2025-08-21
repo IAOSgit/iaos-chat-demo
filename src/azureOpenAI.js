@@ -3,7 +3,9 @@ class AzureOpenAIService {
     // Use different endpoints for development vs production
     this.backendUrl = window.location.hostname === 'localhost' 
       ? 'http://localhost:3001' 
-      : '/api';
+      : window.location.hostname === 'purple-ground-06def9f0f.2.azurestaticapps.net'
+        ? '/api'
+        : '/api';
     
     this.isConfigured = false;
     this.initialize();
