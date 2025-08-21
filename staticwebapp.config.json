@@ -8,6 +8,9 @@
       "allowedRoles": ["anonymous"]
     },
     {
+      "route": "/assets/*"
+    },
+    {
       "route": "/*",
       "rewrite": "/index.html"
     }
