@@ -6,13 +6,15 @@ module.exports = async function (context, req) {
         const AZURE_API_VERSION = process.env.AZURE_OPENAI_API_VERSION;
 
         if (!AZURE_ENDPOINT || !AZURE_API_KEY || !AZURE_DEPLOYMENT) {
+            const errorResponse = {
+                error: 'Azure OpenAI not configured properly',
+                configured: false
+            };
+            
             context.res = {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' },
-                body: {
-                    error: 'Azure OpenAI not configured properly',
-                    configured: false
-                }
+                body: JSON.stringify(errorResponse)
             };
             return;
         }
@@ -37,48 +39,56 @@ module.exports = async function (context, req) {
 
         if (response.ok) {
             context.log('Connection test successful');
+            const successResponse = { 
+                connected: true, 
+                timestamp: new Date().toISOString() 
+            };
+            
             context.res = {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
-                body: { 
-                    connected: true, 
-                    timestamp: new Date().toISOString() 
-                }
+                body: JSON.stringify(successResponse)
             };
         } else {
             const errorText = await response.text();
             context.log.error('Connection test failed:', response.status, response.statusText);
+            const errorResponse = {
+                connected: false,
+                error: `${response.status}: ${response.statusText}`,
+                timestamp: new Date().toISOString()
+            };
+            
             context.res = {
                 status: response.status,
                 headers: { 'Content-Type': 'application/json' },
-                body: {
-                    connected: false,
-                    error: `${response.status}: ${response.statusText}`,
-                    timestamp: new Date().toISOString()
-                }
+                body: JSON.stringify(errorResponse)
             };
         }
     } catch (error) {
         if (error.name === 'TimeoutError') {
             context.log.error('Connection test timeout');
+            const timeoutResponse = {
+                connected: false,
+                error: 'Connection timeout'
+            };
+            
             context.res = {
                 status: 408,
                 headers: { 'Content-Type': 'application/json' },
-                body: {
-                    connected: false,
-                    error: 'Connection timeout'
-                }
+                body: JSON.stringify(timeoutResponse)
             };
         } else {
             context.log.error('Connection test error:', error.message);
+            const errorResponse = {
+                connected: false,
+                error: 'Connection test failed',
+                timestamp: new Date().toISOString()
+            };
+            
             context.res = {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' },
-                body: {
-                    connected: false,
-                    error: 'Connection test failed',
-                    timestamp: new Date().toISOString()
-                }
+                body: JSON.stringify(errorResponse)
             };
         }
     }

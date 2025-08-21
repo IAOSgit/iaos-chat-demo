@@ -1,13 +1,11 @@
 module.exports = async function (context, req) {
-    context.log('Health check request received');
+    context.log('Test function called');
     
     const responseData = {
-        status: 'ok',
-        azure_configured: !!(process.env.AZURE_OPENAI_ENDPOINT && 
-                           process.env.AZURE_OPENAI_API_KEY && 
-                           process.env.AZURE_OPENAI_DEPLOYMENT_NAME),
+        message: 'Hello from Azure Functions!',
         timestamp: new Date().toISOString(),
-        environment: 'production'
+        method: req.method,
+        url: req.url
     };
     
     context.res = {

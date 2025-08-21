@@ -40,7 +40,7 @@ module.exports = async function (context, req) {
             context.res = {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' },
-                body: { error: validationError }
+                body: JSON.stringify({ error: validationError })
             };
             return;
         }
@@ -54,7 +54,7 @@ module.exports = async function (context, req) {
             context.res = {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' },
-                body: { error: 'Azure OpenAI not configured properly' }
+                body: JSON.stringify({ error: 'Azure OpenAI not configured properly' })
             };
             return;
         }
@@ -104,7 +104,7 @@ module.exports = async function (context, req) {
             context.res = {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
-                body: data
+                body: JSON.stringify(data)
             };
         } else {
             const errorText = await response.text();
@@ -112,9 +112,9 @@ module.exports = async function (context, req) {
             context.res = {
                 status: response.status,
                 headers: { 'Content-Type': 'application/json' },
-                body: {
+                body: JSON.stringify({
                     error: `Azure OpenAI error: ${response.status} ${response.statusText}`
-                }
+                })
             };
         }
     } catch (error) {
@@ -123,14 +123,14 @@ module.exports = async function (context, req) {
             context.res = {
                 status: 408,
                 headers: { 'Content-Type': 'application/json' },
-                body: { error: 'Request timeout' }
+                body: JSON.stringify({ error: 'Request timeout' })
             };
         } else {
             context.log.error('Chat request error:', error.message);
             context.res = {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' },
-                body: { error: 'Internal server error' }
+                body: JSON.stringify({ error: 'Internal server error' })
             };
         }
     }
