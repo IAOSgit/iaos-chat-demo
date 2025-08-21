@@ -6,10 +6,10 @@ app.http('testConnection', {
     route: 'test-connection',
     handler: async (request, context) => {
         try {
-            const AZURE_ENDPOINT = process.env.VITE_AZURE_OPENAI_ENDPOINT;
-            const AZURE_API_KEY = process.env.VITE_AZURE_OPENAI_API_KEY;
-            const AZURE_DEPLOYMENT = process.env.VITE_AZURE_OPENAI_DEPLOYMENT_NAME;
-            const AZURE_API_VERSION = process.env.VITE_AZURE_OPENAI_API_VERSION;
+            const AZURE_ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT;
+            const AZURE_API_KEY = process.env.AZURE_OPENAI_API_KEY;
+            const AZURE_DEPLOYMENT = process.env.AZURE_OPENAI_DEPLOYMENT_NAME;
+            const AZURE_API_VERSION = process.env.AZURE_OPENAI_API_VERSION;
 
             if (!AZURE_ENDPOINT || !AZURE_API_KEY || !AZURE_DEPLOYMENT) {
                 return {
